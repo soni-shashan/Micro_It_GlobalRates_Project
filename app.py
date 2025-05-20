@@ -1,6 +1,9 @@
 from flask import Flask, render_template, request, jsonify
 import requests
 import json
+from country_correncies import CURRENCY_COUNTRY_MAP
+from datetime import datetime
+import pytz
 
 app = Flask(__name__)
 
@@ -24,9 +27,17 @@ def index():
     if not exchange_data:
         return render_template('error.html', message="Failed to fetch exchange rates")
     
-    currencies = sorted(exchange_data['rates'].keys())
+    currencies = [(currency, f"{currency} - {CURRENCY_COUNTRY_MAP.get(currency, currency)}") 
+                  for currency in sorted(exchange_data['rates'].keys())]
+    timestamp = exchange_data.get('time_last_updated', 0)
+    utc_time = datetime.fromtimestamp(timestamp, tz=pytz.UTC)
+
+    ist = pytz.timezone('Asia/Kolkata')
+    ist_time = utc_time.astimezone(ist)
+
+    formatted_date = ist_time.strftime('%B %d, %Y, %I:%M:%S %p IST')
     
-    return render_template('index.html', currencies=currencies)
+    return render_template('index.html', currencies=currencies, last_updated=formatted_date)
 
 @app.route('/convert', methods=['POST'])
 def convert():

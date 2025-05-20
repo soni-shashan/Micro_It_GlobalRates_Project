@@ -117,8 +117,8 @@
         <div class="form-group">
             <label for="from-currency">From Currency:</label>
             <select id="from-currency">
-                {% for currency in currencies %}
-                <option value="{{ currency }}" {% if currency == 'USD' %}selected{% endif %}>{{ currency }}</option>
+                {% for currency_code, display_name in currencies %}
+                <option value="{{ currency_code }}" {% if currency_code == 'USD' %}selected{% endif %}>{{ display_name }}</option>
                 {% endfor %}
             </select>
         </div>
@@ -128,8 +128,8 @@
         <div class="form-group">
             <label for="to-currency">To Currency:</label>
             <select id="to-currency">
-                {% for currency in currencies %}
-                <option value="{{ currency }}" {% if currency == 'INR' %}selected{% endif %}>{{ currency }}</option>
+                {% for currency_code, display_name in currencies %}
+                <option value="{{ currency_code }}" {% if currency_code == 'INR' %}selected{% endif %}>{{ display_name }}</option>
                 {% endfor %}
             </select>
         </div>
@@ -145,7 +145,7 @@
             <div class="rate-info" id="rate-info">1 USD = 0.89 EUR</div>
         </div>
         
-        <p class="last-updated" id="last-updated"></p>
+        <p class="last-updated" id="last-updated">Last updated: {{ last_updated }}</p>
     </div>
 
     <script>
